@@ -3,11 +3,12 @@ import javascriptLogo from './javascript.svg'
 import * as THREE from 'three';
 import { OrbitControls } from './OrbitControls';
 
-const SIZE = 35;
+const SIZE = 50;
 const DECAY_STATES = 5;
 
 let scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / innerHeight, 0.1, 1000);
+camera.position.set(SIZE/2 + SIZE, SIZE/2 + SIZE, SIZE/2);
 const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector('#bg'),
 });
@@ -27,14 +28,27 @@ pointLight3.position.set(-100, -100, -100);
 
 let boxes = [];
 const createBoxes = (size, decayStates) => {
+  const midRegion = Math.round(size / 4);
   for (let x = 0; x < size; x++) {
     for (let y = 0; y < size; y++) {
       for (let z = 0; z < size; z++) {
-        if (Math.round(Math.random() * 0.7)) boxes.push({
+        if (x > size/2 + midRegion || x < size/2 - midRegion 
+          || y > size/2 + midRegion || y < size/2 - midRegion
+          || z > size/2 + midRegion || z < size/2 - midRegion) {
+          boxes.push({
+            x,
+            y,
+            z,
+            state: 0
+          });
+          continue;
+        }
+
+        if (Math.round(Math.random() * 0.9)) boxes.push({
           x,
           y,
           z,
-          state: Math.round(Math.random() * DECAY_STATES)
+          state: DECAY_STATES - 1
         });
         else boxes.push({
           x,
@@ -81,7 +95,7 @@ const setBoxAlive = (x, y, z) => {
     x,
     y,
     z,
-    state: DECAY_STATES
+    state: DECAY_STATES - 1
   }
 }
 
@@ -116,8 +130,8 @@ const step = () => {
   for (let x = 0; x < SIZE; x++) {
     for (let y = 0; y < SIZE; y++) {
       for (let z = 0; z < SIZE; z++) {
-        stepBox(x, y, z, [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], 
-        [13, 14, 17, 18]);
+        stepBox(x, y, z, [4], 
+        [4]);
       }
     }  
   }
