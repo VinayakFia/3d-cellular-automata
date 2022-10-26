@@ -12,6 +12,7 @@
     "vite": "^3.1.0"
   },
   "dependencies": {
+    "javascript-color-gradient": "^2.4.4",
     "three": "^0.145.0"
   }
 }
