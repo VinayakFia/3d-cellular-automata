@@ -5,10 +5,11 @@ import { OrbitControls } from "./OrbitControls";
 
 const SIZE = 100;
 const DECAY_STATES = 1;
-const SURVIVE_RULE = [0, 1, 2, 4, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 21, 22, 23, 24, 25, 26];
+const SURVIVE_RULE = [
+  0, 1, 2, 4, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 21, 22, 23, 24, 25, 26,
+];
 const ALIVE_RULE = [9, 10, 16, 23, 24];
 
-// SHIT THAT WORKS
 let scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -16,7 +17,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.set(3 * SIZE/4, 3 * SIZE/4, 3 * SIZE/4);
+camera.position.set((3 * SIZE) / 4, (3 * SIZE) / 4, (3 * SIZE) / 4);
 const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector("#bg"),
 });
@@ -76,20 +77,27 @@ const createBoxes = (size, decayStates) => {
 };
 createBoxes(SIZE, DECAY_STATES);
 
-const startCol = {r: 251, g: 80, b: 18}
-const endCol = {r: 3, g: 252, b: 186}
-const gradient = Array(DECAY_STATES + 1).fill(1).map((x, i) => x = {
-  r: (startCol.r + (endCol.r - startCol.r) * i / DECAY_STATES) / 255,
-  g: (startCol.g + (endCol.g - startCol.g) * i / DECAY_STATES) / 255,
-  b: (startCol.g + (endCol.b - startCol.b) * i / DECAY_STATES) / 255  
-});
-const materials = Array(DECAY_STATES + 1).fill(1).map((x, i) => {
-  const material = new THREE.MeshStandardMaterial();
-  material.transparent = true;
-  material.opacity = 0.5;
-  material.color.setRGB(gradient[i].r, gradient[i].g, gradient[i].b);
-  return material;
-});
+const startCol = { r: 251, g: 80, b: 18 };
+const endCol = { r: 3, g: 252, b: 186 };
+const gradient = Array(DECAY_STATES + 1)
+  .fill(1)
+  .map(
+    (x, i) =>
+      (x = {
+        r: (startCol.r + ((endCol.r - startCol.r) * i) / DECAY_STATES) / 255,
+        g: (startCol.g + ((endCol.g - startCol.g) * i) / DECAY_STATES) / 255,
+        b: (startCol.g + ((endCol.b - startCol.b) * i) / DECAY_STATES) / 255,
+      })
+  );
+const materials = Array(DECAY_STATES + 1)
+  .fill(1)
+  .map((x, i) => {
+    const material = new THREE.MeshStandardMaterial();
+    material.transparent = true;
+    material.opacity = 0.5;
+    material.color.setRGB(gradient[i].r, gradient[i].g, gradient[i].b);
+    return material;
+  });
 console.log(materials);
 const renderBoxes = () => {
   scene = new THREE.Scene();
@@ -99,7 +107,11 @@ const renderBoxes = () => {
     //console.log(location.state);
     //console.log(gradient[location.state].r);
     const box = new THREE.Mesh(geometry, materials[location.state]);
-    box.position.set(location.x - SIZE / 2, location.y - SIZE / 2, location.z - SIZE / 2);
+    box.position.set(
+      location.x - SIZE / 2,
+      location.y - SIZE / 2,
+      location.z - SIZE / 2
+    );
     scene.add(box);
   }
   scene.add(pointLight);
@@ -167,13 +179,7 @@ const step = () => {
   for (let x = 0; x < SIZE; x++) {
     for (let y = 0; y < SIZE; y++) {
       for (let z = 0; z < SIZE; z++) {
-        stepBox(
-          x,
-          y,
-          z,
-          ALIVE_RULE,
-          SURVIVE_RULE
-        );
+        stepBox(x, y, z, ALIVE_RULE, SURVIVE_RULE);
       }
     }
   }
