@@ -1,12 +1,11 @@
 import "./style.css";
-import javascriptLogo from "./javascript.svg";
 import * as THREE from "three";
 import { OrbitControls } from "./OrbitControls";
 
-const SIZE = 100;
-const DECAY_STATES = 1;
+const SIZE = 50;
+const DECAY_STATES = 4;
 const SURVIVE_RULE = [
-  0, 1, 2, 4, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 21, 22, 23, 24, 25, 26,
+  0, 1, 2, 4, 6, 7, 8, 9, 10, 11, 13, 14,
 ];
 const ALIVE_RULE = [9, 10, 16, 23, 24];
 
@@ -89,12 +88,13 @@ const gradient = Array(DECAY_STATES + 1)
         b: (startCol.g + ((endCol.b - startCol.b) * i) / DECAY_STATES) / 255,
       })
   );
+console.log(gradient);
 const materials = Array(DECAY_STATES + 1)
   .fill(1)
   .map((x, i) => {
     const material = new THREE.MeshStandardMaterial();
     material.transparent = true;
-    material.opacity = 0.5;
+    material.opacity = 0.9;
     material.color.setRGB(gradient[i].r, gradient[i].g, gradient[i].b);
     return material;
   });
@@ -187,8 +187,7 @@ const step = () => {
 };
 
 let i = 0;
-
-function animate() {
+const animate = () => {
   requestAnimationFrame(animate);
   renderBoxes();
   step();
